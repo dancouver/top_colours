@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .color-box {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #000;  /* Add border to make it more visible */
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Upload Image for Color Analysis</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Choose Image</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        {% if filename %}
+        <h2 class="mt-5">Top 10 Colors </h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Color</th>
+                    <th>Usage</th>
+                    <th>CSS Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for color_data in colors %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td style="width: 60px;">
+                        <div class="color-box" style="background-color: {{ color_data['hex'] }};"></div>
+                    </td>
+                    <td>{{ '%.2f'|format(color_data['percentage'] * 100) }}%</td>
+                    <td>{{ color_data['hex'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>Uploaded Image: {{ filename }}</h3>
+        <img src="{{ url_for('thumbnail_file', filename=filename) }}" alt="{{ filename }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+        {% endif %}
+    </div>
+</body>
+</html>
